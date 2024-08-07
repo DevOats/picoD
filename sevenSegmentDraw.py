@@ -31,6 +31,10 @@ class SevenSegmentDigit():
         self.currentNumber = number
         self.__drawSegments(number)
         
+
+    def setX(self, x: int):
+        self.x = x
+    
     
     def __drawSegments(self, number: int):
         sw = self.segWidth
@@ -54,7 +58,7 @@ class SevenSegmentDigit():
         horizSegWidth = self.width - (1 * sw)
         
         # Boundary rectangle for debugging and development
-        #self.buff.rect(self.x, self.y, self.width, self.height, True)
+        # self.buff.rect(self.x, self.y, self.width, self.height, True)
         
         # Draw the segments in two passes.
         # First draw the segments that are lit. Then the segments that shoud be dark.

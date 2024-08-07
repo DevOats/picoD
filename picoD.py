@@ -10,7 +10,7 @@ class PicoD:
     # Constructor
     def __init__(self):
         
-        self.diceSize = 32
+        self.diceSize = 7
         
         self.display=PicoOled13.get()
         self.display.clear()
@@ -21,7 +21,8 @@ class PicoD:
         self.digits = MultiDigitDisplay(self.display,
                           50, 17,
                           digitCount = 2,
-                          displayLeadingZeros = False)
+                          displayLeadingZeros = False,
+                          autoCenter = True)
 
 
     def run(self):
@@ -40,7 +41,12 @@ class PicoD:
         
     
     def __setState_RollDice(self):
-       
+        
+        self.__clearDisplay()
+        self.display.rect(40, 7, 57, 50, 1, 1)
+        self.display.rect(45, 12, 47, 40, 0, 1)
+        self.display.show()
+        
         self.key0.setCallback_buttonDown(None)
         self.key0.setCallback_click(None)
         self.key0.setCallback_longPress(None)
