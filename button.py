@@ -44,7 +44,7 @@ class Button:
         self.buttonDownStartTicks = -1;
         
         self.button = Pin(gpioPinNumber,Pin.IN,Pin.PULL_UP)
-        self.button.irq(trigger=machine.Pin.IRQ_RISING | machine.Pin.IRQ_FALLING, handler = self.__button_interruptHandler)
+        self.button.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler = self.__button_interruptHandler)
 
 
     def __button_interruptHandler(self, buttonPin):
