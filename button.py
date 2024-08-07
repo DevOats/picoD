@@ -10,16 +10,19 @@ class Button:
     # Constructor
     def __init__(self,
                  gpioPinNumber: int,
+                 downCallback: Callable = None,
                  clickCallback: Callable = None,
                  longClickCallback: Callable = None,
                  longClickTimeMs: int = 1500):
         
+        self.buttonDownCallback = downCallback
         self.clickCallback = clickCallback
         self.longClickCallback = longClickCallback
         self.longClickTimeMs = longClickTimeMs
         
         self.buttonState = 1
         self.clickedFlag: bool = False
+        self.buttonDownFlag: bool = False
         self.buttonDownStartTicks = -1;
         
         self.button = Pin(gpioPinNumber,Pin.IN,Pin.PULL_UP)
@@ -40,10 +43,16 @@ class Button:
         # If we were Released, but we're now pressed
         if((self.buttonState == 1) and (self.button.value() == 0)):
             self.buttonState = 0
+            self.buttonDownFlag = True
             self.buttonDownStartTicks = time.ticks_ms() # get millisecond counter
         
         #Re-enable the interrupts
         self.button.irq(handler = self.__button_interruptHandler)
+
+
+    # Sets the callback for handling when the button is pushed down
+    def setButtonDownCallback(self, callback: Callable):
+        self.buttonDownCallback = callback
 
 
     # Sets the callback for handling standard button clicks
@@ -68,11 +77,17 @@ class Button:
     # This is to prevent lengthy application code to be executed on the interrupt handler routine
     def execute(self):
         
+        # Determine if the button has been pushed down
+        if(self.buttonDownFlag):
+            if(self.buttonDownCallback != None):
+                self.buttonDownCallback()
+            self.buttonDownFlag = False
+            
+        
         # Determine if the button has been clicked
         if(self.clickedFlag):
             if(self.clickCallback != None):
-                self.clickCallback()
-                
+                self.clickCallback()   
             self.clickedFlag = False
             
         
@@ -92,12 +107,15 @@ class Button:
 # Manual test code from here
 #
 
+def buttonDownTestCallback():
+    print("Callback: Button down")
+
 def clickTestCallback():
-    print("Clicked from the callback")
+    print("Callback: Button clicked")
     
     
 def longClickTestCallback():
-    print("Long click from the callback")
+    print("Callback: Button long clicked")
 
 
 # Only run this to test the library
@@ -107,6 +125,7 @@ if __name__ == '__main__':
     
     # Create a button and assign the click and longClick event callbacks
     button = Button(15,
+                    buttonDownTestCallback,
                     clickTestCallback,
                     longClickTestCallback)
     
