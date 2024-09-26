@@ -7,6 +7,7 @@ import random
 
 class PicoD:
 
+
     # Constructor
     def __init__(self):
         
@@ -30,11 +31,7 @@ class PicoD:
 
     def run(self):
         print("Running")
-        
-        self.display.clear()
-        self.digits.displayNumber(88)
-        self.display.show()
-        
+        self.__showSplash() 
         self.__setState_RollDice()
         
         
@@ -43,6 +40,15 @@ class PicoD:
             self.key1.execute()
             time.sleep_ms(1)
         
+    def __showSplash(self):
+        self.display.clear()
+        self.display.rect(0, 0, 128, 64, 1, 0)
+        self.display.rect(2, 2, 124, 60, 1, 0)
+        self.display.text("Pico D", 50, 15)
+        self.display.text("MakeITWork", 35, 32)
+        self.display.text("Groningen", 39, 42)
+        self.display.show()
+        time.sleep_ms(5000)
     
     def __setState_RollDice(self):
         self.__drawRollDiceScreen()
@@ -77,6 +83,7 @@ class PicoD:
 
     def __drawRollDiceScreen(self):
         self.__clearDisplay()
+        self.display.rect(0, 0, 128, 64, 1, 0)
         self.display.rect(64, 7, 57, 50, 1, 1)
         self.display.rect(69, 12, 47, 40, 0, 1)
         
@@ -90,7 +97,7 @@ class PicoD:
         
     def __drawDiceSelector(self):
         # Clear
-        self.display.rect(16, self.diceListY, 8, self.diceListY + 60, 0, 1)
+        self.display.rect(16, self.diceListY, 8, self.diceListY + 53, 0, 1)
         y = self.diceListY + (self.selectedDiceIndex * 10)
         self.display.text(">", 16, y)
 
